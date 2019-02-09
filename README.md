@@ -1,0 +1,1 @@
+My own private repository for projects built during the Udacity's React Nanodegree program.
