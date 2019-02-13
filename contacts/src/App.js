@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import ContactList from './ContactList';
 
-const list = [
-	{ name: 'Pedro Neves', username: 'phfn' }
-]
-
 class App extends Component {
+	state = {
+		contacts: [
+			{ name: 'John Doe', username: 'jde' }
+		]
+	}
+
 	render() {
 		return (
 			<div>
-				<ContactList contacts={list} />
+				<ContactList contacts={this.state.contacts} />
 				<ContactList />
 			</div>
 		);
