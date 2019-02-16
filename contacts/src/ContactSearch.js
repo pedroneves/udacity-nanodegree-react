@@ -9,11 +9,13 @@ class ContactSearch extends Component {
 	}
 
 	updateQuery (query) {
-		this.setState(() => ({
-			query: query.trim()
-		}));
-
+		query = query.trim();
+		this.setState(() => ({ query }));
 		this.props.onUpdateQuery(query);
+	}
+
+	handleChange = (event) => {
+		this.updateQuery(event.target.value)
 	}
 
 	render () {
@@ -23,7 +25,7 @@ class ContactSearch extends Component {
 					type="text"
 					placeholder="Click here to filter your contacts"
 					value={this.state.query}
-					onChange={event => this.updateQuery(event.target.value)}
+					onChange={this.handleChange}
 				/>
 			</div>
 		)
