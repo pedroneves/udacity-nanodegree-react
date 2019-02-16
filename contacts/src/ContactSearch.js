@@ -9,8 +9,11 @@ class ContactSearch extends Component {
 	}
 
 	updateQuery (query) {
-		console.log(query.trim())
-		this.setState(() => ({ query }));
+		this.setState(() => ({
+			query: query.trim()
+		}));
+
+		this.props.onUpdateQuery(query);
 	}
 
 	render () {

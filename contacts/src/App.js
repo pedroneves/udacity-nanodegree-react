@@ -3,8 +3,11 @@ import ContactList from './ContactList';
 import ContactSearch from './ContactSearch';
 
 class App extends Component {
-	state = {
-		contacts: [
+
+	constructor (props) {
+		super(props)
+
+		this.allContacts = [
 			{
 				id: 'tyler',
 				name: 'Tyler McGinnis',
@@ -21,12 +24,26 @@ class App extends Component {
 				username: 'richardkalehoff'
 			},
 		]
+
+		this.state = {
+			contacts: this.allContacts
+		}
+	}
+
+	filterContacts = (query) => {
+		this.setState(() => {
+			const contacts = this.allContacts.filter(contact => {
+				return contact.name.toLowerCase().includes(query);
+			});
+
+			return { contacts };
+		})
 	}
 
 	render() {
 		return (
 			<div>
-				<ContactSearch />
+				<ContactSearch onUpdateQuery={this.filterContacts} />
 				<ContactList contacts={this.state.contacts} />
 			</div>
 		);
