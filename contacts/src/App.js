@@ -5,7 +5,21 @@ import ContactSearch from './ContactSearch';
 class App extends Component {
 	state = {
 		contacts: [
-			{ name: 'John Doe', username: 'jde' }
+			{
+				id: 'tyler',
+				name: 'Tyler McGinnis',
+				username: 'tylermcginnis'
+			},
+			{
+				id: 'karen',
+				name: 'Karen Isgrigg',
+				username: 'karen_isgrigg'
+			},
+			{
+				id: 'richard',
+				name: 'Richard Kalehoff',
+				username: 'richardkalehoff'
+			},
 		]
 	}
 
