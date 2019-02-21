@@ -26,6 +26,7 @@ class App extends Component {
 		]
 
 		this.state = {
+			query: '',
 			contacts: this.allContacts
 		}
 	}
@@ -33,15 +34,16 @@ class App extends Component {
 	filterContacts = (query) => {
 		this.setState(() => {
 			const contacts = this.allContacts.filter(contact => {
-				return contact.name.toLowerCase().includes(query);
+				return contact.name.toLowerCase().includes(query.toLowerCase());
 			});
 
-			return { contacts };
+			return { contacts, query };
 		})
 	}
 
 	resetFilter = () => {
 		this.setState(() => ({
+			query: '',
 			contacts: this.allContacts
 		}))
 	}
@@ -58,7 +60,7 @@ class App extends Component {
 
 		return (
 			<div>
-				<ContactSearch onUpdateQuery={this.filterContacts} />
+				<ContactSearch onUpdateQuery={this.filterContacts} query={this.state.query} />
 				{isShowingContactsAmountMessage ? contactsAmountMessage : <div></div>}
 				<ContactList contacts={this.state.contacts} />
 			</div>
