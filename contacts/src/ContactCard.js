@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class ContactCard extends Component {
-	render () {
-		const { contact } = this.props;
-		return <li>{contact.name}</li>
-	}
+function ContactCard (props) {
+	const { contact } = props;
+	return <li>{contact.name}</li>
 }
 
 export default ContactCard;

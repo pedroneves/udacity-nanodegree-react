@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ContactCard from './ContactCard';
 
-class ContactList extends Component {
-	render () {
-		const { contacts = [] } = this.props;
+function ContactList (props) {
+	const { contacts = [] } = props;
 
-		if (!contacts.length) {
-			return (
-				<ul>
-					<li>No contacts right now :(</li>
-				</ul>
-			);
-		}
-
+	if (!contacts.length) {
 		return (
-			<ol>{
-				contacts.map(contact => {
-					return <ContactCard key={contact.username} contact={contact} />
-				})
-			}</ol>
+			<ul>
+				<li>No contacts right now :(</li>
+			</ul>
 		);
 	}
+
+	return (
+		<ol>{
+			contacts.map(contact => {
+				return <ContactCard key={contact.username} contact={contact} />
+			})
+		}</ol>
+	);
 }
 
 export default ContactList;
