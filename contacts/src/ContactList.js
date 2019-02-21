@@ -14,9 +14,13 @@ function ContactList (props) {
 
 	return (
 		<ol>{
-			contacts.map(contact => {
-				return <ContactCard key={contact.username} contact={contact} />
-			})
+			contacts.map(contact => (
+				<ContactCard
+					key={contact.id}
+					contact={contact}
+					onRemoveContact={props.onRemoveContact}
+				/>
+			))
 		}</ol>
 	);
 }

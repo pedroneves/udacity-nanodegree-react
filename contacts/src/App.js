@@ -1,34 +1,36 @@
 import React, { Component } from 'react';
 import ContactList from './ContactList';
 import ContactSearch from './ContactSearch';
+import * as ContactAPI from './utils/ContactsAPI';
 
 class App extends Component {
 
 	constructor (props) {
 		super(props)
 
-		this.allContacts = [
-			{
-				id: 'tyler',
-				name: 'Tyler McGinnis',
-				username: 'tylermcginnis'
-			},
-			{
-				id: 'karen',
-				name: 'Karen Isgrigg',
-				username: 'karen_isgrigg'
-			},
-			{
-				id: 'richard',
-				name: 'Richard Kalehoff',
-				username: 'richardkalehoff'
-			},
-		]
+		this.allContacts = []
 
 		this.state = {
 			query: '',
+			status: 'loading',
 			contacts: this.allContacts
 		}
+	}
+
+	componentDidMount() {
+		this.loadContacts();
+	}
+
+	loadContacts () {
+		this.setState(() => ({ status: 'loading' }))
+
+		ContactAPI.getAll().then(contacts => {
+			this.allContacts = contacts;
+			this.setState(() => ({
+				contacts,
+				status: 'ready'
+			}))
+		})
 	}
 
 	filterContacts = (query) => {
@@ -48,7 +50,17 @@ class App extends Component {
 		}))
 	}
 
+	removeContact = (contact) => {
+		ContactAPI.remove(contact).then(data => {
+			return this.loadContacts()
+		});
+	}
+
 	render() {
+		if (this.state.status === 'loading') {
+			return (<p>Fetching contacts from server...</p>)
+		}
+
 		const contactsAmountMessage = (
 			<div>
 				<span>Showing {this.state.contacts.length} of {this.allContacts.length}</span>
@@ -62,7 +74,7 @@ class App extends Component {
 			<div>
 				<ContactSearch onUpdateQuery={this.filterContacts} query={this.state.query} />
 				{isShowingContactsAmountMessage ? contactsAmountMessage : <div></div>}
-				<ContactList contacts={this.state.contacts} />
+				<ContactList contacts={this.state.contacts} onRemoveContact={this.removeContact} />
 			</div>
 		);
 	}
