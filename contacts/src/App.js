@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ContactList from './ContactList';
 import ContactSearch from './ContactSearch';
 import * as ContactAPI from './utils/ContactsAPI';
+import { Route } from 'react-router-dom';
 
 class App extends Component {
 
@@ -57,26 +58,34 @@ class App extends Component {
 	}
 
 	render() {
-		if (this.state.status === 'loading') {
-			return (<p>Fetching contacts from server...</p>)
-		}
-
-		const contactsAmountMessage = (
-			<div>
-				<span>Showing {this.state.contacts.length} of {this.allContacts.length}</span>
-				<button onClick={() => this.resetFilter()}>Show all</button>
-			</div>
-		)
-
-		const isShowingContactsAmountMessage = this.state.contacts.length !== this.allContacts.length;
-
 		return (
-			<div>
-				<ContactSearch onUpdateQuery={this.filterContacts} query={this.state.query} />
-				{isShowingContactsAmountMessage ? contactsAmountMessage : <div></div>}
-				<ContactList contacts={this.state.contacts} onRemoveContact={this.removeContact} />
-			</div>
-		);
+			<Route
+				exact
+				path="/"
+				render={() => {
+					if (this.state.status === 'loading') {
+						return (<p>Fetching contacts from server...</p>)
+					}
+
+					const contactsAmountMessage = (
+						<div>
+							<span>Showing {this.state.contacts.length} of {this.allContacts.length}</span>
+							<button onClick={() => this.resetFilter()}>Show all</button>
+						</div>
+					)
+
+					const isShowingContactsAmountMessage = this.state.contacts.length !== this.allContacts.length;
+
+					return (
+						<div>
+							<ContactSearch onUpdateQuery={this.filterContacts} query={this.state.query} />
+							{isShowingContactsAmountMessage ? contactsAmountMessage : <div></div>}
+							<ContactList contacts={this.state.contacts} onRemoveContact={this.removeContact} />
+						</div>
+					);
+				}
+			} />
+		)
 	}
 }
 
