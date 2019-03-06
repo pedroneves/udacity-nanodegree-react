@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Udacity ToDo App</title>
+</head>
+<body>
+	<script>
+		// Source: https://github.com/pedroneves/store
+		function createStore (reducer=((state) => state)) {
+			let state = {};
+			let listeners = [];
+
+			const store = {}
+
+			store.getState = function getState () {
+				return state
+			}
+
+			store.subscribe = function subscribe(fn) {
+				listeners.push(fn);
+				return () => {
+					listeners = listeners.filter(listener => listener !== fn)
+				}
+			}
+
+			store.dispatch = function dispatch (action) {
+				state = reducer(state, action);
+				listeners.forEach(listener => listener())
+			}
+
+			return store
+		}
+	</script>
+</body>
+</html>
