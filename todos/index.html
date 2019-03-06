@@ -47,6 +47,12 @@
 			return store
 		}
 
+		// Aux functions
+		// Source: https://github.com/udacity/reactnd-redux-todos-goals/blob/707da3250f13adfef00fdbf032a563135cdf939a/index.html#L20
+		function generateId () {
+			return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+		}
+
 		// Action types
 		const ADD_TODO = 'ADD_TODO'
 		const REMOVE_TODO = 'REMOVE_TODO'
@@ -111,6 +117,36 @@
 				goals: goals(state.goals, action),
 				todos: todos(state.todos, action)
 			}
+		}
+
+		// App
+		const store = createStore(rootReducer);
+
+		function addTodo () {
+			const input = document.getElementById('todo')
+			const name = input.value
+			input.value = ''
+
+			store.dispatch(
+				addToDoAction({
+					id: generateId(),
+					name,
+					isDone: false
+				})
+			)
+		}
+
+		function addGoal () {
+			const input = document.getElementById('goal')
+			const name = input.value
+			input.value = ''
+
+			store.dispatch(
+				addToDoAction({
+					id: generateId(),
+					name,
+				})
+			)
 		}
 	</script>
 </body>
