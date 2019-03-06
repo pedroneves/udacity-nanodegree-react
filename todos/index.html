@@ -108,8 +108,8 @@
 
 		function rootReducer (state={}, action) {
 			return {
-				goals: goals(state.goals),
-				todos: todos(state.todos)
+				goals: goals(state.goals, action),
+				todos: todos(state.todos, action)
 			}
 		}
 	</script>
