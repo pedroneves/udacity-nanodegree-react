@@ -122,6 +122,10 @@
 		// App
 		const store = createStore(rootReducer);
 
+		const unsubscribeStateLog = store.subscribe(() => {
+			console.log(store.getState())
+		});
+
 		function addTodo () {
 			const input = document.getElementById('todo')
 			const name = input.value
