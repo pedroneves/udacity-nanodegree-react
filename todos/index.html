@@ -126,6 +126,22 @@
 			console.log(store.getState())
 		});
 
+		const unsubscribeTodosListRefresh = store.subscribe(() => {
+			const { todos } = store.getState();
+
+			document.getElementById('todos').innerHTML = ''
+
+			todos.forEach(addToDoToDOM);
+		})
+
+		const unsubscribeGoalsListRefresh = store.subscribe(() => {
+			const { goals } = store.getState();
+
+			document.getElementById('goals').innerHTML = ''
+
+			goals.forEach(addGoalToDOM);
+		})
+
 		function addTodo () {
 			const input = document.getElementById('todo')
 			const name = input.value
@@ -158,6 +174,24 @@
 
 		document.getElementById('goalBtn')
 			.addEventListener('click', addGoal)
+
+		function addToDoToDOM (todo) {
+			const li = document.createElement('li')
+			const text = document.createTextNode(todo.name)
+			li.appendChild(text);
+
+			document.getElementById('todos')
+				.appendChild(li)
+		}
+
+		function addGoalToDOM (goal) {
+			const li = document.createElement('li')
+			const text = document.createTextNode(goal.name)
+			li.appendChild(text);
+
+			document.getElementById('goals')
+				.appendChild(li)
+		}
 	</script>
 </body>
 </html>
