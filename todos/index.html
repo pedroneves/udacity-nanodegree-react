@@ -89,9 +89,9 @@
 				case REMOVE_TODO:
 					return todos.filter(todo => todo.id !== action.id)
 				case TOGGLE_TODO:
-					return todo.map(todo => {
+					return todos.map(todo => {
 						if (todo.id === action.id) {
-							todo.isDone = !todo.isDone
+							todo = Object.assign({}, todo, { isDone: !todo.isDone })
 						}
 
 						return todo
@@ -156,6 +156,14 @@
 			)
 		}
 
+		function toggleTodo (event) {
+			const id = event.target.id.split('-')[1]
+
+			store.dispatch(
+				toggleToDoAction(id)
+			)
+		}
+
 		function addGoal () {
 			const input = document.getElementById('goal')
 			const name = input.value
@@ -178,7 +186,15 @@
 		function addToDoToDOM (todo) {
 			const li = document.createElement('li')
 			const text = document.createTextNode(todo.name)
+
+			li.id = `todo-${todo.id}`;
+
+			if (todo.isDone) {
+				li.style.textDecoration = 'line-through'
+			}
+
 			li.appendChild(text);
+			li.addEventListener('click', toggleTodo)
 
 			document.getElementById('todos')
 				.appendChild(li)
