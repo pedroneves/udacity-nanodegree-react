@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Udacity ToDo App</title>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
 </head>
 <body>
 	<div>
@@ -21,31 +23,6 @@
 	</div>
 
 	<script>
-		// Source: https://github.com/pedroneves/store
-		function createStore (reducer=((state) => state)) {
-			let state = {};
-			let listeners = [];
-
-			const store = {}
-
-			store.getState = function getState () {
-				return state
-			}
-
-			store.subscribe = function subscribe(fn) {
-				listeners.push(fn);
-				return () => {
-					listeners = listeners.filter(listener => listener !== fn)
-				}
-			}
-
-			store.dispatch = function dispatch (action) {
-				state = reducer(state, action);
-				listeners.forEach(listener => listener())
-			}
-
-			return store
-		}
 
 		// Aux functions
 		// Source: https://github.com/udacity/reactnd-redux-todos-goals/blob/707da3250f13adfef00fdbf032a563135cdf939a/index.html#L20
@@ -112,15 +89,13 @@
 			}
 		}
 
-		function rootReducer (state={}, action) {
-			return {
-				goals: goals(state.goals, action),
-				todos: todos(state.todos, action)
-			}
-		}
-
 		// App
-		const store = createStore(rootReducer);
+		const store = Redux.createStore(
+			Redux.combineReducers({
+				goals,
+				todos
+			})
+		);
 
 		const unsubscribeStateLog = store.subscribe(() => {
 			console.log(store.getState())
