@@ -89,12 +89,28 @@
 			}
 		}
 
+		// Middlewares
+		const alertBitcoin = (store) => (next) => (action) => {
+			const shouldVerify = [ADD_TODO, ADD_GOAL].includes(action.type);
+
+			if (shouldVerify) {
+				let name = action.todo ? action.todo.name : action.goal.name;
+
+				if (name.toLowerCase().includes('bitcoin')){
+					return alert('Check bitcoin.org first')
+				}
+			}
+
+			next(action)
+		}
+
 		// App
 		const store = Redux.createStore(
 			Redux.combineReducers({
 				goals,
 				todos
-			})
+			}),
+			Redux.applyMiddleware(alertBitcoin)
 		);
 
 		const unsubscribeStateLog = store.subscribe(() => {
