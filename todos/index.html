@@ -104,18 +104,30 @@
 			next(action)
 		}
 
+		const logger = (store) => (next) => (action) => {
+			console.group(action.type);
+
+			console.log('Prev state:', store.getState())
+			console.log('Action:', action);
+			const result = next(action);
+			console.log('New state:', store.getState())
+
+			console.groupEnd(action.type);
+
+			return result
+		}
+
 		// App
 		const store = Redux.createStore(
 			Redux.combineReducers({
 				goals,
 				todos
 			}),
-			Redux.applyMiddleware(alertBitcoin)
+			Redux.applyMiddleware(
+				alertBitcoin,
+				logger
+			)
 		);
-
-		const unsubscribeStateLog = store.subscribe(() => {
-			console.log(store.getState())
-		});
 
 		const unsubscribeTodosListRefresh = store.subscribe(() => {
 			const { todos } = store.getState();
