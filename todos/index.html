@@ -258,10 +258,36 @@
 		}
 
 		class Todos extends React.Component {
+			addTodo (name) {
+				this.props.store.dispatch(
+					addToDoAction({
+						id: generateId(),
+						name,
+						isDone: false
+					})
+				)
+			}
+
+			handleAddItem = (event) => {
+				event.preventDefault()
+				const name = this.input.value
+				this.input.value = ''
+
+				this.addTodo(name)
+			}
+
 			render () {
 				return (
 					<div>
 						<h1>To-do List</h1>
+						<form onSubmit={this.handleAddItem}>
+							<input
+								type="text"
+								placeholder="Add todo"
+								ref={(input) => this.input = input}
+							/>
+							<button onClick={this.handleAddItem}>Add To-Do</button>
+						</form>
 
 						<List />
 					</div>
@@ -285,14 +311,14 @@
 			render() {
 				return (
 					<div>
-						<Todos />
-						<Goals />
+						<Todos store={this.props.store} />
+						<Goals store={this.props.store} />
 					</div>
 				)
 			}
 		}
 
-		ReactDOM.render(<App />, document.getElementById('app-root'))
+		ReactDOM.render(<App store={store} />, document.getElementById('app-root'))
 	</script>
 </body>
 </html>
