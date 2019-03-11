@@ -270,8 +270,8 @@
 
 			handleAddItem = (event) => {
 				event.preventDefault()
-				const name = this.input.value
-				this.input.value = ''
+				const name = this.todoInput.value
+				this.todoInput.value = ''
 
 				this.addTodo(name)
 			}
@@ -284,7 +284,7 @@
 							<input
 								type="text"
 								placeholder="Add todo"
-								ref={(input) => this.input = input}
+								ref={(input) => this.todoInput = input}
 							/>
 							<button onClick={this.handleAddItem}>Add To-Do</button>
 						</form>
@@ -296,10 +296,37 @@
 		}
 
 		class Goals extends React.Component {
+			addTodo (name) {
+				this.props.store.dispatch(
+					addGoalAction({
+						id: generateId(),
+						name,
+						isDone: false
+					})
+				)
+			}
+
+			handleAddItem = (event) => {
+				event.preventDefault()
+				const name = this.goalInput.value
+				this.goalInput.value = ''
+
+				this.addTodo(name)
+			}
+
 			render () {
 				return (
 					<div>
 						<h1>Goals List</h1>
+
+						<form onSubmit={this.handleAddItem}>
+							<input
+								type="text"
+								placeholder="Add goal"
+								ref={(input) => this.goalInput = input}
+							/>
+							<button onClick={this.handleAddItem}>Add Goal</button>
+						</form>
 
 						<List />
 					</div>
