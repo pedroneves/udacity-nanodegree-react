@@ -10,6 +10,7 @@
 	<script src="https://unpkg.com/react@16.3.0-alpha.1/umd/react.development.js"></script>
 	<script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
 	<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+	<script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
 </head>
 <body>
 
@@ -283,11 +284,42 @@
 
 			componentDidMount () {
 				const { store } = this.props;
-				store.subscribe(() => {
-					const {todos, goals} = store.getState();
 
-					this.setState(() => {
-						return { todos, goals };
+				Promise.all([
+					API.fetchTodos(),
+					API.fetchGoals()
+				]).then(results => {
+					const [todos, goals] = results;
+
+					todos.forEach(todo => {
+						store.dispatch({
+							type: ADD_TODO,
+							todo: {
+								id: todo.id,
+								name: todo.name,
+								isDone: todo.complete
+							}
+						});
+					});
+
+					goals.forEach(goal => {
+						store.dispatch({
+							type: ADD_GOAL,
+							goal: {
+								id: goal.id,
+								name: goal.name
+							}
+						});
+					});
+
+					this.setState(() => ({ todos, goals }))
+
+					store.subscribe(() => {
+						const {todos, goals} = store.getState();
+
+						this.setState(() => {
+							return { todos, goals };
+						});
 					});
 				});
 			}
