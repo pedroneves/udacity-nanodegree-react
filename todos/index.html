@@ -249,10 +249,36 @@
 	</script>
 
 	<script type="text/babel">
+		function ListItem (props) {
+			const {value, isDone, onToggleItem} = props;
+
+			const style = {
+				textDecoration: isDone ? 'line-through' : 'none'
+			}
+
+			return (
+				<li>
+					<span onClick={onToggleItem} style={style}>{value}</span>
+					<button>X</button>
+				</li>
+			)
+		}
+
 		function List (props) {
+			const { items, onCompleteItem = () => {} } = props
+
 			return (
 				<ul>
-					<li>ITEM</li>
+				{
+					items.map(item => (
+						<ListItem
+							key={item.id}
+							value={item.name}
+							isDone={item.isDone}
+							onToggleItem={() => onCompleteItem(item)}
+						/>
+					))
+				}
 				</ul>
 			)
 		}
@@ -268,12 +294,22 @@
 				)
 			}
 
+			toggleTodo (todo) {
+				this.props.store.dispatch(
+					toggleToDoAction(todo.id)
+				)
+			}
+
 			handleAddItem = (event) => {
 				event.preventDefault()
 				const name = this.todoInput.value
 				this.todoInput.value = ''
 
 				this.addTodo(name)
+			}
+
+			onCompleteItem = (item) => {
+				this.toggleTodo(item)
 			}
 
 			render () {
@@ -289,7 +325,7 @@
 							<button onClick={this.handleAddItem}>Add To-Do</button>
 						</form>
 
-						<List />
+						<List items={this.props.todos} onCompleteItem={this.onCompleteItem} />
 					</div>
 				);
 			}
@@ -328,18 +364,28 @@
 							<button onClick={this.handleAddItem}>Add Goal</button>
 						</form>
 
-						<List />
+						<List items={this.props.goals} />
 					</div>
 				);
 			}
 		}
 
 		class App extends React.Component {
+			componentDidMount () {
+				const { store } = this.props;
+				store.subscribe(() => {
+					this.forceUpdate()
+				})
+			}
+
 			render() {
+				const { store } = this.props;
+				const { todos, goals } = store.getState();
+
 				return (
 					<div>
-						<Todos store={this.props.store} />
-						<Goals store={this.props.store} />
+						<Todos todos={todos} store={this.props.store} />
+						<Goals goals={goals} store={this.props.store} />
 					</div>
 				)
 			}
