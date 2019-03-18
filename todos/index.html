@@ -250,22 +250,26 @@
 
 	<script type="text/babel">
 		function ListItem (props) {
-			const {value, isDone, onToggleItem} = props;
+			const {value, isDone, onToggleItem, onRemoveItem} = props;
 
 			const style = {
 				textDecoration: isDone ? 'line-through' : 'none'
-			}
+			};
 
 			return (
 				<li>
 					<span onClick={onToggleItem} style={style}>{value}</span>
-					<button>X</button>
+					<button onClick={onRemoveItem}>X</button>
 				</li>
-			)
+			);
 		}
 
 		function List (props) {
-			const { items, onCompleteItem = () => {} } = props
+			const {
+				items,
+				onCompleteItem = () => {},
+				onRemoveItem = () => {}
+			} = props;
 
 			return (
 				<ul>
@@ -276,11 +280,12 @@
 							value={item.name}
 							isDone={item.isDone}
 							onToggleItem={() => onCompleteItem(item)}
+							onRemoveItem={() => onRemoveItem(item)}
 						/>
 					))
 				}
 				</ul>
-			)
+			);
 		}
 
 		class Todos extends React.Component {
@@ -291,25 +296,35 @@
 						name,
 						isDone: false
 					})
-				)
+				);
 			}
 
 			toggleTodo (todo) {
 				this.props.store.dispatch(
 					toggleToDoAction(todo.id)
-				)
+				);
+			}
+
+			removeTodo (todo) {
+				this.props.store.dispatch(
+					removeToDoAction(todo.id)
+				);
 			}
 
 			handleAddItem = (event) => {
-				event.preventDefault()
-				const name = this.todoInput.value
-				this.todoInput.value = ''
+				event.preventDefault();
+				const name = this.todoInput.value;
+				this.todoInput.value = '';
 
-				this.addTodo(name)
+				this.addTodo(name);
 			}
 
-			onCompleteItem = (item) => {
-				this.toggleTodo(item)
+			onCompleteTodo = (item) => {
+				this.toggleTodo(item);
+			}
+
+			onRemoveTodo = (item) => {
+				this.removeTodo(item);
 			}
 
 			render () {
@@ -325,29 +340,43 @@
 							<button onClick={this.handleAddItem}>Add To-Do</button>
 						</form>
 
-						<List items={this.props.todos} onCompleteItem={this.onCompleteItem} />
+						<List
+							items={this.props.todos}
+							onCompleteItem={this.onCompleteTodo}
+							onRemoveItem={this.onRemoveTodo}
+						/>
 					</div>
 				);
 			}
 		}
 
 		class Goals extends React.Component {
-			addTodo (name) {
+			addGoal (name) {
 				this.props.store.dispatch(
 					addGoalAction({
 						id: generateId(),
 						name,
 						isDone: false
 					})
-				)
+				);
+			}
+
+			removeGoal (goal) {
+				this.props.store.dispatch(
+					removeGoalAction(goal.id)
+				);
 			}
 
 			handleAddItem = (event) => {
 				event.preventDefault()
-				const name = this.goalInput.value
-				this.goalInput.value = ''
+				const name = this.goalInput.value;
+				this.goalInput.value = '';
 
-				this.addTodo(name)
+				this.addGoal(name);
+			}
+
+			onRemoveGoal = (item) => {
+				this.removeGoal(item);
 			}
 
 			render () {
@@ -364,7 +393,7 @@
 							<button onClick={this.handleAddItem}>Add Goal</button>
 						</form>
 
-						<List items={this.props.goals} />
+						<List items={this.props.goals} onRemoveItem={this.onRemoveGoal} />
 					</div>
 				);
 			}
@@ -375,7 +404,7 @@
 				const { store } = this.props;
 				store.subscribe(() => {
 					this.forceUpdate()
-				})
+				});
 			}
 
 			render() {
@@ -387,11 +416,11 @@
 						<Todos todos={todos} store={this.props.store} />
 						<Goals goals={goals} store={this.props.store} />
 					</div>
-				)
+				);
 			}
 		}
 
-		ReactDOM.render(<App store={store} />, document.getElementById('app-root'))
+		ReactDOM.render(<App store={store} />, document.getElementById('app-root'));
 	</script>
 </body>
 </html>
