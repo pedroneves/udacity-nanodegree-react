@@ -400,21 +400,30 @@
 		}
 
 		class App extends React.Component {
+
+			state = {
+				todos: [],
+				goals: []
+			};
+
 			componentDidMount () {
 				const { store } = this.props;
 				store.subscribe(() => {
-					this.forceUpdate()
+					const {todos, goals} = store.getState();
+
+					this.setState(() => {
+						return { todos, goals };
+					});
 				});
 			}
 
 			render() {
 				const { store } = this.props;
-				const { todos, goals } = store.getState();
 
 				return (
 					<div>
-						<Todos todos={todos} store={this.props.store} />
-						<Goals goals={goals} store={this.props.store} />
+						<Todos todos={this.state.todos} store={this.props.store} />
+						<Goals goals={this.state.goals} store={this.props.store} />
 					</div>
 				);
 			}
