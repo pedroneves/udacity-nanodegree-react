@@ -6,23 +6,23 @@ I've decided to make this public just after the begning of the course, but if yo
 
 # Content
 
-Every project and exercise will have its own branch. The following list is what I've done so far:
+Every project and exercise will have its own dir. The following list is what I've done so far:
 
 1. [Contacts](#contacts)
-1. [ToDos](#todos)
+1. [To-Dos](#todos)
 
 ## Contacts
 
 Create a contact list, where the user can add, filter and remove contacts. This project is based on the [reactnd-contacts-app](https://github.com/udacity/reactnd-contacts-app), but I've decided to start from scratch, in order to learn all the details, as much as I can.
 
-To access the code, switch to the `contacts-master` branch.
+To access the code, go to the `./contacts-master` directory.
 
 [list](#content)
 
-## ToDos
+## To-Dos
 
 Create a To-Do list, where the user can add and remove to-do activities and Goals. This project is based on the [reactnd-redux-todos-goals](https://github.com/udacity/reactnd-redux-todos-goals), but I've decided to start from scratch, in order to learn all the details, as much as I can.
 
-To access the code, switch to the `todos-master` branch.
+To access the code, go to the `./todos-master` directory.
 
 [list](#content)
