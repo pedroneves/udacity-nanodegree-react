@@ -97,6 +97,15 @@
 			}
 		}
 
+		function loading (state=true, action) {
+			switch (action.type) {
+				case RECEIVE_DATA:
+					return false;
+				default:
+					return state;
+			}
+		}
+
 		// Middlewares
 		const alertBitcoin = (store) => (next) => (action) => {
 			const shouldVerify = [ADD_TODO, ADD_GOAL].includes(action.type);
@@ -129,7 +138,8 @@
 		const store = Redux.createStore(
 			Redux.combineReducers({
 				goals,
-				todos
+				todos,
+				loading
 			}),
 			Redux.applyMiddleware(
 				alertBitcoin,
@@ -293,10 +303,11 @@
 
 			state = {
 				todos: [],
-				goals: []
+				goals: [],
+				isLoading: true
 			};
 
-			componentDidMount () {
+			loadDataFromServer () {
 				const { store } = this.props;
 
 				Promise.all([
@@ -306,10 +317,10 @@
 					const [todos, goals] = results;
 
 					store.subscribe(() => {
-						const {todos, goals} = store.getState();
+						const {todos, goals, loading} = store.getState();
 
 						this.setState(() => {
-							return { todos, goals };
+							return { todos, goals, isLoading: loading };
 						});
 					});
 
@@ -319,8 +330,16 @@
 				});
 			}
 
+			componentDidMount () {
+				this.loadDataFromServer();
+			}
+
 			render() {
 				const { store } = this.props;
+
+				if (this.state.isLoading) {
+					return <h3>Loading...</h3>
+				}
 
 				return (
 					<div>
