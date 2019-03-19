@@ -30,6 +30,7 @@
 		const TOGGLE_TODO = 'TOGGLE_TODO'
 		const ADD_GOAL = 'ADD_GOAL'
 		const REMOVE_GOAL = 'REMOVE_GOAL'
+		const RECEIVE_DATA = 'RECEIVE_DATA'
 
 		// Action Creators
 		function addToDoAction (todo) {
@@ -52,6 +53,10 @@
 			return { type: REMOVE_GOAL, id }
 		}
 
+		function receiveDataAction (todos, goals) {
+			return { type: RECEIVE_DATA, goals, todos };
+		}
+
 		// Reducers
 		function todos (todos=[], action) {
 			switch (action.type) {
@@ -67,6 +72,13 @@
 
 						return todo
 					})
+				case RECEIVE_DATA:
+					return action.todos.map(todo => ({
+							id: todo.id,
+							name: todo.name,
+							isDone: todo.complete
+						})
+					);
 				default:
 					return todos
 			}
@@ -78,6 +90,8 @@
 					return goals.concat([action.goal])
 				case REMOVE_GOAL:
 					return goals.filter(goal => goal.id !== action.id)
+				case RECEIVE_DATA:
+					return action.goals;
 				default:
 					return goals
 			}
@@ -291,29 +305,6 @@
 				]).then(results => {
 					const [todos, goals] = results;
 
-					todos.forEach(todo => {
-						store.dispatch({
-							type: ADD_TODO,
-							todo: {
-								id: todo.id,
-								name: todo.name,
-								isDone: todo.complete
-							}
-						});
-					});
-
-					goals.forEach(goal => {
-						store.dispatch({
-							type: ADD_GOAL,
-							goal: {
-								id: goal.id,
-								name: goal.name
-							}
-						});
-					});
-
-					this.setState(() => ({ todos, goals }))
-
 					store.subscribe(() => {
 						const {todos, goals} = store.getState();
 
@@ -321,6 +312,10 @@
 							return { todos, goals };
 						});
 					});
+
+					store.dispatch(
+						receiveDataAction(todos, goals)
+					)
 				});
 			}
 
