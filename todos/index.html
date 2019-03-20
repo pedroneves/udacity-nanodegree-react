@@ -190,13 +190,16 @@
 
 		class Todos extends React.Component {
 			addTodo (name) {
-				this.props.store.dispatch(
-					addToDoAction({
-						id: generateId(),
-						name,
-						isDone: false
+				return API.saveTodo(name)
+					.then((todo) => {
+						this.props.store.dispatch(
+							addToDoAction(todo)
+						);
+					}).catch(() => {
+						const error = new Error('Failed to add new To-Do');
+						error.name = name;
+						return Promise.reject(error);
 					})
-				);
 			}
 
 			toggleTodo (todo) {
@@ -230,9 +233,19 @@
 			handleAddItem = (event) => {
 				event.preventDefault();
 				const name = this.todoInput.value;
-				this.todoInput.value = '';
 
-				this.addTodo(name);
+				this.todoInput.disabled = true;
+				this.addTodoBtn.disabled = true;
+
+				this.addTodo(name)
+					.then(() => {
+						this.todoInput.value = '';
+					}).catch((error) => {
+						alert(error.message)
+					}).finally(() => {
+						this.todoInput.disabled = false
+						this.addTodoBtn.disabled = false;
+					});
 			}
 
 			onCompleteTodo = (item) => {
@@ -253,7 +266,12 @@
 								placeholder="Add todo"
 								ref={(input) => this.todoInput = input}
 							/>
-							<button onClick={this.handleAddItem}>Add To-Do</button>
+							<button
+								onClick={this.handleAddItem}
+								ref={(addTodoBtn => this.addTodoBtn = addTodoBtn)}
+							>
+								Add To-Do
+							</button>
 						</form>
 
 						<List
@@ -268,13 +286,16 @@
 
 		class Goals extends React.Component {
 			addGoal (name) {
-				this.props.store.dispatch(
-					addGoalAction({
-						id: generateId(),
-						name,
-						isDone: false
+				return API.saveGoal(name)
+					.then((goal) => {
+						this.props.store.dispatch(
+							addGoalAction(goal)
+						);
+					}).catch(() => {
+						const error = new Error('Failed to add new Goal');
+						error.name = name;
+						return Promise.reject(error);
 					})
-				);
 			}
 
 			removeGoal (goal) {
@@ -294,9 +315,19 @@
 			handleAddItem = (event) => {
 				event.preventDefault()
 				const name = this.goalInput.value;
-				this.goalInput.value = '';
 
-				this.addGoal(name);
+				this.goalInput.disabled = true;
+				this.addGoalBtn.disabled = true;
+
+				this.addGoal(name)
+					.then(() => {
+						this.goalInput.value = '';
+					}).catch((error) => {
+						alert(error.message)
+					}).finally(() => {
+						this.goalInput.disabled = false
+						this.addGoalBtn.disabled = false;
+					});
 			}
 
 			onRemoveGoal = (item) => {
@@ -314,7 +345,12 @@
 								placeholder="Add goal"
 								ref={(input) => this.goalInput = input}
 							/>
-							<button onClick={this.handleAddItem}>Add Goal</button>
+							<button
+								onClick={this.handleAddItem}
+								ref={(addGoalBtn => this.addGoalBtn = addGoalBtn)}
+							>
+								Add Goal
+							</button>
 						</form>
 
 						<List items={this.props.goals} onRemoveItem={this.onRemoveGoal} />
