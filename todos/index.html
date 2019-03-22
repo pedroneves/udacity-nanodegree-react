@@ -11,6 +11,7 @@
 	<script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
 	<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 	<script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
+	<script src="https://unpkg.com/redux-thunk@2.2.0/dist/redux-thunk.min.js"></script>
 </head>
 <body>
 
@@ -55,6 +56,47 @@
 
 		function receiveDataAction (todos, goals) {
 			return { type: RECEIVE_DATA, goals, todos };
+		}
+
+		// Thunks
+		function addToDoThunk (name, cb) {
+			return (dispatch) => {
+				API.saveTodo(name)
+					.then((todo) => {
+						dispatch(addToDoAction(todo));
+						cb();
+					}).catch(() => {
+						const error = new Error('Failed to add new To-Do');
+						error.name = name;
+						cb(error);
+					})
+			}
+		}
+
+		function removeToDoThunk (todo, cb) {
+			return dispatch => {
+				dispatch(removeToDoAction(todo.id));
+
+				API.deleteTodo(todo.id)
+					.then(() => cb())
+					.catch(() => {
+						dispatch(addToDoAction(todo));
+						cb(new Error('An error occurred. Try again.'))
+					})
+			}
+		}
+
+		function toggleToDoThunk (todo, cb) {
+			return (dispatch) => {
+				dispatch(toggleToDoAction(todo.id));
+
+				API.saveTodoToggle(todo.id)
+					.then(() => cb())
+					.catch(() => {
+						dispatch(toggleToDoAction(todo.id))
+						cb(new Error('An error occurred. Try again.'))
+					})
+			}
 		}
 
 		// Reducers
@@ -142,6 +184,7 @@
 				loading
 			}),
 			Redux.applyMiddleware(
+				ReduxThunk.default,
 				alertBitcoin,
 				logger
 			)
@@ -189,46 +232,6 @@
 		}
 
 		class Todos extends React.Component {
-			addTodo (name) {
-				return API.saveTodo(name)
-					.then((todo) => {
-						this.props.store.dispatch(
-							addToDoAction(todo)
-						);
-					}).catch(() => {
-						const error = new Error('Failed to add new To-Do');
-						error.name = name;
-						return Promise.reject(error);
-					})
-			}
-
-			toggleTodo (todo) {
-				this.props.store.dispatch(
-					toggleToDoAction(todo.id)
-				);
-
-				API.saveTodoToggle(todo.id)
-					.catch(() => {
-						this.props.store.dispatch(
-							toggleToDoAction(todo.id)
-						)
-						alert('An error occurred. Try again.')
-					})
-			}
-
-			removeTodo (todo) {
-				this.props.store.dispatch(
-					removeToDoAction(todo.id)
-				);
-
-				API.deleteTodo(todo.id)
-					.catch(() => {
-						this.props.store.dispatch(
-							addToDoAction(todo)
-						)
-						alert('An error occurred. Try again.')
-					})
-			}
 
 			handleAddItem = (event) => {
 				event.preventDefault();
@@ -237,23 +240,33 @@
 				this.todoInput.disabled = true;
 				this.addTodoBtn.disabled = true;
 
-				this.addTodo(name)
-					.then(() => {
-						this.todoInput.value = '';
-					}).catch((error) => {
-						alert(error.message)
-					}).finally(() => {
+				this.props.store.dispatch(
+					addToDoThunk(name, (error) => {
+						if (error) {
+							alert(error.message)
+						} else {
+							this.todoInput.value = '';
+						}
 						this.todoInput.disabled = false
 						this.addTodoBtn.disabled = false;
-					});
+					})
+				)
 			}
 
 			onCompleteTodo = (item) => {
-				this.toggleTodo(item);
+				this.props.store.dispatch(
+					toggleToDoThunk(item, (error) => {
+						if(error) { alert(error.message) }
+					})
+				)
 			}
 
 			onRemoveTodo = (item) => {
-				this.removeTodo(item);
+				this.props.store.dispatch(
+					removeToDoThunk(item, (error) => {
+						if(error) { alert(error.message) }
+					})
+				)
 			}
 
 			render () {
