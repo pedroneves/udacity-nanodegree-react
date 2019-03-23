@@ -126,6 +126,21 @@
 			}
 		}
 
+		function receiveDataThunk (cb) {
+			return dispatch => {
+				Promise.all([
+					API.fetchTodos(),
+					API.fetchGoals()
+				]).then(results => {
+					const [todos, goals] = results;
+
+					store.dispatch(
+						receiveDataAction(todos, goals)
+					)
+				});
+			}
+		}
+
 		// Reducers
 		function todos (todos=[], action) {
 			switch (action.type) {
@@ -387,31 +402,24 @@
 				isLoading: true
 			};
 
-			loadDataFromServer () {
+			componentDidMount () {
 				const { store } = this.props;
 
-				Promise.all([
-					API.fetchTodos(),
-					API.fetchGoals()
-				]).then(results => {
-					const [todos, goals] = results;
+				store.subscribe(() => {
+					const {todos, goals, loading} = store.getState();
 
-					store.subscribe(() => {
-						const {todos, goals, loading} = store.getState();
-
-						this.setState(() => {
-							return { todos, goals, isLoading: loading };
-						});
+					this.setState(() => {
+						return { todos, goals, isLoading: loading };
 					});
-
-					store.dispatch(
-						receiveDataAction(todos, goals)
-					)
 				});
-			}
 
-			componentDidMount () {
-				this.loadDataFromServer();
+				store.dispatch(
+					receiveDataThunk((error, todos, goals) => {
+						if (error) {
+							return alert(error.message)
+						}
+					})
+				)
 			}
 
 			render() {
