@@ -431,14 +431,69 @@
 
 				return (
 					<div>
-						<Todos todos={this.state.todos} store={this.props.store} />
-						<Goals goals={this.state.goals} store={this.props.store} />
+						<ConnectedTodos todos={this.state.todos} />
+						<ConnectedGoals goals={this.state.goals} />
 					</div>
 				);
 			}
 		}
 
-		ReactDOM.render(<App store={store} />, document.getElementById('app-root'));
+		const Context = React.createContext();
+
+		class Provider extends React.Component {
+			render() {
+				return (
+					<Context.Provider value={store}>
+					{
+						this.props.children
+					}
+					</Context.Provider>
+				)
+			}
+		}
+
+		class ConnectedApp extends React.Component {
+			render () {
+				return (
+					<Context.Consumer>
+					{(store) => (
+						<App store={store} />
+					)}
+					</Context.Consumer>
+				)
+			}
+		}
+
+		class ConnectedTodos extends React.Component {
+			render () {
+				return (
+					<Context.Consumer>
+					{(store) => (
+						<Todos store={store} todos={this.props.todos} />
+					)}
+					</Context.Consumer>
+				)
+			}
+		}
+
+		class ConnectedGoals extends React.Component {
+			render () {
+				return (
+					<Context.Consumer>
+					{(store) => (
+						<Goals store={store} goals={this.props.goals} />
+					)}
+					</Context.Consumer>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<Provider>
+				<ConnectedApp />,
+			</Provider>,
+			document.getElementById('app-root')
+		);
 	</script>
 </body>
 </html>
