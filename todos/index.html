@@ -99,6 +99,33 @@
 			}
 		}
 
+		function addGoalThunk (name, cb) {
+			return (dispatch) => {
+				API.saveGoal(name)
+					.then((todo) => {
+						dispatch(addGoalAction(todo));
+						cb();
+					}).catch(() => {
+						const error = new Error('Failed to add new Goal');
+						error.name = name;
+						cb(error);
+					})
+			}
+		}
+
+		function removeGoalThunk (goal, cb) {
+			return dispatch => {
+				dispatch(removeGoalAction(goal.id));
+
+				API.deleteGoal(goal.id)
+					.then(() => cb())
+					.catch(() => {
+						dispatch(addGoalAction(goal));
+						cb(new Error('An error occurred. Try again.'))
+					})
+			}
+		}
+
 		// Reducers
 		function todos (todos=[], action) {
 			switch (action.type) {
@@ -298,32 +325,6 @@
 		}
 
 		class Goals extends React.Component {
-			addGoal (name) {
-				return API.saveGoal(name)
-					.then((goal) => {
-						this.props.store.dispatch(
-							addGoalAction(goal)
-						);
-					}).catch(() => {
-						const error = new Error('Failed to add new Goal');
-						error.name = name;
-						return Promise.reject(error);
-					})
-			}
-
-			removeGoal (goal) {
-				this.props.store.dispatch(
-					removeGoalAction(goal.id)
-				);
-
-				API.deleteGoal(goal.id)
-					.catch(() => {
-						this.props.store.dispatch(
-							addGoalAction(goal)
-						)
-						alert('An error occurred. Try again.')
-					})
-			}
 
 			handleAddItem = (event) => {
 				event.preventDefault()
@@ -332,19 +333,25 @@
 				this.goalInput.disabled = true;
 				this.addGoalBtn.disabled = true;
 
-				this.addGoal(name)
-					.then(() => {
-						this.goalInput.value = '';
-					}).catch((error) => {
-						alert(error.message)
-					}).finally(() => {
+				this.props.store.dispatch(
+					addGoalThunk(name, (error) => {
+						if (error) {
+							alert(error.message)
+						} else {
+							this.goalInput.value = '';
+						}
 						this.goalInput.disabled = false
 						this.addGoalBtn.disabled = false;
-					});
+					})
+				)
 			}
 
 			onRemoveGoal = (item) => {
-				this.removeGoal(item);
+				this.props.store.dispatch(
+					removeGoalThunk(item, (error) => {
+						if(error) { alert(error.message) }
+					})
+				)
 			}
 
 			render () {
