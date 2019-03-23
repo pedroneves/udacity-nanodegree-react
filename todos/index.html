@@ -282,7 +282,7 @@
 				this.todoInput.disabled = true;
 				this.addTodoBtn.disabled = true;
 
-				this.props.store.dispatch(
+				this.props.dispatch(
 					addToDoThunk(name, (error) => {
 						if (error) {
 							alert(error.message)
@@ -296,7 +296,7 @@
 			}
 
 			onCompleteTodo = (item) => {
-				this.props.store.dispatch(
+				this.props.dispatch(
 					toggleToDoThunk(item, (error) => {
 						if(error) { alert(error.message) }
 					})
@@ -304,7 +304,7 @@
 			}
 
 			onRemoveTodo = (item) => {
-				this.props.store.dispatch(
+				this.props.dispatch(
 					removeToDoThunk(item, (error) => {
 						if(error) { alert(error.message) }
 					})
@@ -348,7 +348,7 @@
 				this.goalInput.disabled = true;
 				this.addGoalBtn.disabled = true;
 
-				this.props.store.dispatch(
+				this.props.dispatch(
 					addGoalThunk(name, (error) => {
 						if (error) {
 							alert(error.message)
@@ -362,7 +362,7 @@
 			}
 
 			onRemoveGoal = (item) => {
-				this.props.store.dispatch(
+				this.props.dispatch(
 					removeGoalThunk(item, (error) => {
 						if(error) { alert(error.message) }
 					})
@@ -396,24 +396,14 @@
 
 		class App extends React.Component {
 
-			state = {
-				todos: [],
-				goals: [],
-				isLoading: true
-			};
-
 			componentDidMount () {
-				const { store } = this.props;
+				const { dispatch, subscribe } = this.props;
 
-				store.subscribe(() => {
-					const {todos, goals, loading} = store.getState();
-
-					this.setState(() => {
-						return { todos, goals, isLoading: loading };
-					});
+				subscribe(() => {
+					this.forceUpdate();
 				});
 
-				store.dispatch(
+				dispatch(
 					receiveDataThunk((error, todos, goals) => {
 						if (error) {
 							return alert(error.message)
@@ -423,16 +413,16 @@
 			}
 
 			render() {
-				const { store } = this.props;
+				const { loading } = this.props;
 
-				if (this.state.isLoading) {
+				if (loading) {
 					return <h3>Loading...</h3>
 				}
 
 				return (
 					<div>
-						<ConnectedTodos todos={this.state.todos} />
-						<ConnectedGoals goals={this.state.goals} />
+						<ConnectedTodos />
+						<ConnectedGoals />
 					</div>
 				);
 			}
@@ -456,9 +446,16 @@
 			render () {
 				return (
 					<Context.Consumer>
-					{(store) => (
-						<App store={store} />
-					)}
+					{(store) => {
+						const { loading } = store.getState();
+						return (
+							<App
+								dispatch={store.dispatch}
+								subscribe={store.subscribe}
+								loading={loading}
+							/>
+						)
+					}}
 					</Context.Consumer>
 				)
 			}
@@ -468,9 +465,10 @@
 			render () {
 				return (
 					<Context.Consumer>
-					{(store) => (
-						<Todos store={store} todos={this.props.todos} />
-					)}
+					{(store) => {
+						const { todos } = store.getState();
+						return <Todos todos={todos} dispatch={store.dispatch} />
+					}}
 					</Context.Consumer>
 				)
 			}
@@ -480,9 +478,10 @@
 			render () {
 				return (
 					<Context.Consumer>
-					{(store) => (
-						<Goals store={store} goals={this.props.goals} />
-					)}
+					{(store) => {
+						const { goals } = store.getState();
+						return <Goals goals={goals} dispatch={store.dispatch} />
+					}}
 					</Context.Consumer>
 				)
 			}
