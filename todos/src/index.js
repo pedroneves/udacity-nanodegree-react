@@ -1,6 +1,18 @@
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './components/App';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import reducers from './reducers';
+import middlewares from './middlewares';
+import ConnectedApp from './components/App';
+
+const store = createStore(reducers, middlewares);
+
+ReactDOM.render(
+	<Provider store={ store }>
+		<ConnectedApp />
+	</Provider>,
+	document.getElementById('root')
+);

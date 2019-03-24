@@ -17,6 +17,11 @@ export function handleReceiveData (cb) {
 			dispatch(
 				receiveData(todos, goals)
 			)
+
+			cb(null, todos, goals);
+		}).catch(() => {
+			const error = new Error('Failed to load To-Dos and Goals from API');
+			cb(error);
 		});
 	}
 }
