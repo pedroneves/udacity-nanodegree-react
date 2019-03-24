@@ -9,7 +9,8 @@ I've decided to make this public just after the begning of the course, but if yo
 Every project and exercise will have its own dir. The following list is what I've done so far:
 
 1. [Contacts](#contacts)
-1. [To-Dos](#todos)
+1. [To-Dos](#To-Dos)
+1. [Chirper](#Chirper)
 
 ## Contacts
 
@@ -24,5 +25,13 @@ To access the code, go to the `./contacts` directory.
 Create a To-Do list, where the user can add and remove to-do activities and Goals. This project is based on the [reactnd-redux-todos-goals](https://github.com/udacity/reactnd-redux-todos-goals), but I've decided to start from scratch, in order to learn all the details, as much as I can.
 
 To access the code, go to the `./todos` directory.
+
+[list](#content)
+
+## Chirper
+
+A Twitter-like application to interact with tweets. This project is a clone from the [reactnd-chirper-app](https://github.com/udacity/reactnd-chirper-app) repo.
+
+To access the code, go to the `./chirper` directory.
 
 [list](#content)
