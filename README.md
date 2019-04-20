@@ -11,6 +11,7 @@ Every project and exercise will have its own dir. The following list is what I'v
 1. [Contacts](#contacts)
 1. [To-Dos](#To-Dos)
 1. [Chirper](#Chirper)
+1. [UdaciFitness](#UdaciFitness)
 
 ## Contacts
 
@@ -31,6 +32,14 @@ To access the code, go to the `./todos` directory.
 ## Chirper
 
 A Twitter-like application to interact with tweets. This project is a clone from the [reactnd-chirper-app](https://github.com/udacity/reactnd-chirper-app) repo.
+
+To access the code, go to the `./chirper` directory.
+
+[list](#content)
+
+## UdaciFitness
+
+A Triathlon tracking app for Android and iOS using React Native. This project is based on the [reactnd-UdaciFitness-complete](https://github.com/udacity/reactnd-UdaciFitness-complete), but I've decided to start from scratch, in order to learn all the details, as much as I can.
 
 To access the code, go to the `./chirper` directory.
 
