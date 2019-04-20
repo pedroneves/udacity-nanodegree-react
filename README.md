@@ -41,6 +41,6 @@ To access the code, go to the `./chirper` directory.
 
 A Triathlon tracking app for Android and iOS using React Native. This project is based on the [reactnd-UdaciFitness-complete](https://github.com/udacity/reactnd-UdaciFitness-complete), but I've decided to start from scratch, in order to learn all the details, as much as I can.
 
-To access the code, go to the `./chirper` directory.
+To access the code, go to the `./udaci-fitness` directory.
 
 [list](#content)
