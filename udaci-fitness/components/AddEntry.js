@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { getMetricMetaInfo } from '../utils/helpers';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { getMetricMetaInfo, timeToString } from '../utils/helpers';
 
 import DateHeader from './DateHeader';
 import UdaciSlider from './UdaciSlider';
 import UdaciStepper from './UdaciStepper';
+
+function SubmitBtn ({ onPress=(()=>{}) }={}) {
+	return (
+		<TouchableOpacity onPress={onPress}>
+			<Text>SUBMIT</Text>
+		</TouchableOpacity>
+	)
+}
 
 function clip (val, {min=-Infinity, max=Infinity}={}) {
 	if (val < min) {
@@ -27,6 +35,22 @@ export default class AddEntry extends Component {
 			eat: 0,
 			sleep: 0
 		}
+	}
+
+	reset () {
+		this.setState(current => {
+			return {
+				run: 0,
+				bike: 0,
+				swim: 0,
+				eat: 0,
+				sleep: 0
+			};
+		})
+	}
+
+	getEntry () {
+		return Object.assign({}, this.state);
 	}
 
 	increment (metric) {
@@ -58,6 +82,20 @@ export default class AddEntry extends Component {
 				[metric]: value
 			}
 		})
+	}
+
+	submit = () => {
+		const key = timeToString();
+		const entry = this.getEntry();
+
+		// TODOS
+		// Update redux
+
+		this.reset()
+
+		// Navigate to Home
+		// Save to DB
+		// Clean local notification
 	}
 
 	renderMetricSwitcher (metric, type, initialValue, switcherProps) {
@@ -105,6 +143,7 @@ export default class AddEntry extends Component {
 						);
 					})
 				}
+				<SubmitBtn onPress={this.submit} />
 			</View>
 		)
 	}
