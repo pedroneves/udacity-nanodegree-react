@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { getMetricMetaInfo, timeToString } from '../utils/helpers';
+import {Ionicons} from '@expo/vector-icons'
 
 import DateHeader from './DateHeader';
 import UdaciSlider from './UdaciSlider';
 import UdaciStepper from './UdaciStepper';
+import TextButton from './TextButton';
 
 function SubmitBtn ({ onPress=(()=>{}) }={}) {
 	return (
@@ -90,6 +92,15 @@ export default class AddEntry extends Component {
 
 		// TODOS
 		// Update redux
+		// Navigate to Home
+		// Save to DB
+	}
+
+	resetEntry = () => {
+		const key = timeToString();
+
+		// TODOS
+		// Update redux
 
 		this.reset()
 
@@ -126,6 +137,21 @@ export default class AddEntry extends Component {
 	render () {
 		const metaInfo = getMetricMetaInfo();
 		const metrics = Object.keys(metaInfo);
+
+		if (this.props.alreadyLogged) {
+			return (
+				<View>
+					<Ionicons
+						name="md-happy"
+						size={100}
+					/>
+					<Text>You already logged your information for today</Text>
+					<TextButton onPress={this.resetEntry}>
+						<Text>Reset</Text>
+					</TextButton>
+				</View>
+			)
+		}
 
 		return (
 			<View>
