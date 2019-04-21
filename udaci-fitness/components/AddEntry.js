@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { getMetricMetaInfo } from '../utils/helpers';
 
+import DateHeader from './DateHeader';
 import UdaciSlider from './UdaciSlider';
 import UdaciStepper from './UdaciStepper';
 
@@ -90,6 +91,7 @@ export default class AddEntry extends Component {
 
 		return (
 			<View>
+				<DateHeader date={new Date()} />
 				{
 					metrics.map(metric => {
 						const { getIcon, type, ...rest } = metaInfo[metric];
