@@ -11,7 +11,8 @@ export default function UdaciSlider ({ max, min, step, value, unit, onChange }) 
 				maximumValue={max}
 				onValueChange={onChange}
 			/>
-			<Text>{value} {unit}</Text>
+			<Text>{value}</Text>
+			<Text>{unit}</Text>
 		</View>
 	)
 }
