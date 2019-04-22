@@ -1,7 +1,8 @@
+import * as API from '../utils/api';
 import React, { Component } from 'react';
+import {Ionicons} from '@expo/vector-icons'
 import { View, Text, TouchableOpacity } from 'react-native';
 import { getMetricMetaInfo, timeToString } from '../utils/helpers';
-import {Ionicons} from '@expo/vector-icons'
 
 import DateHeader from './DateHeader';
 import UdaciSlider from './UdaciSlider';
@@ -93,7 +94,7 @@ export default class AddEntry extends Component {
 		// TODOS
 		// Update redux
 		// Navigate to Home
-		// Save to DB
+		API.submitEntry({entry, key});
 	}
 
 	resetEntry = () => {
@@ -105,7 +106,7 @@ export default class AddEntry extends Component {
 		this.reset()
 
 		// Navigate to Home
-		// Save to DB
+		API.removeEntry(key);
 		// Clean local notification
 	}
 
