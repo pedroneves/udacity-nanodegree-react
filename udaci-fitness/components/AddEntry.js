@@ -1,8 +1,11 @@
 import * as API from '../utils/api';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import {Ionicons} from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { getMetricMetaInfo, timeToString } from '../utils/helpers';
+import { getMetricMetaInfo, timeToString, getDailyRemainderValue } from '../utils/helpers';
+
+import { addEntry } from '../actions'
 
 import DateHeader from './DateHeader';
 import UdaciSlider from './UdaciSlider';
@@ -27,7 +30,7 @@ function clip (val, {min=-Infinity, max=Infinity}={}) {
 	}
 }
 
-export default class AddEntry extends Component {
+class AddEntry extends Component {
 	constructor (props) {
 		super(props);
 
@@ -92,7 +95,7 @@ export default class AddEntry extends Component {
 		const entry = this.getEntry();
 
 		// TODOS
-		// Update redux
+		this.props.dispatch(addEntry({ [key]: entry }));
 		// Navigate to Home
 		API.submitEntry({entry, key});
 	}
@@ -101,10 +104,8 @@ export default class AddEntry extends Component {
 		const key = timeToString();
 
 		// TODOS
-		// Update redux
-
+		this.props.dispatch(addEntry({ [key]: getDailyRemainderValue() }));
 		this.reset()
-
 		// Navigate to Home
 		API.removeEntry(key);
 		// Clean local notification
@@ -175,3 +176,13 @@ export default class AddEntry extends Component {
 		)
 	}
 }
+
+function mapStateToProps (state) {
+	const key = timeToString();
+
+	return {
+		alreadyLogged: Boolean(state[key]) && !Boolean(state[key].today)
+	}
+}
+
+export default connect(mapStateToProps)(AddEntry);
