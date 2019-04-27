@@ -1,8 +1,12 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Colors from "./colors";
 import Styles from "./styles";
+
+export function isIOS () { return Platform.OS === 'ios'}
+
+export function isAndroid () { return Platform.OS === 'android'}
 
 export function isBetween (num, x, y) {
 	if (num >= x && num <= y) {

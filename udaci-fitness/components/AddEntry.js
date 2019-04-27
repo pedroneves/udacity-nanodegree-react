@@ -2,8 +2,15 @@ import * as API from '../utils/api';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { getMetricMetaInfo, timeToString, getDailyRemainderValue } from '../utils/helpers';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+	getMetricMetaInfo,
+	timeToString,
+	getDailyRemainderValue,
+	isIOS,
+	isAndroid
+} from '../utils/helpers';
+import * as Colors from '../utils/colors';
 
 import { addEntry } from '../actions'
 
@@ -13,9 +20,11 @@ import UdaciStepper from './UdaciStepper';
 import TextButton from './TextButton';
 
 function SubmitBtn ({ onPress=(()=>{}) }={}) {
+	const style = isIOS() ? styles.iosSubmitBtn : styles.androidSubmitBtn
+
 	return (
-		<TouchableOpacity onPress={onPress}>
-			<Text>SUBMIT</Text>
+		<TouchableOpacity onPress={onPress} style={style}>
+			<Text style={styles.submitBtnText}>SUBMIT</Text>
 		</TouchableOpacity>
 	)
 }
@@ -142,9 +151,9 @@ class AddEntry extends Component {
 
 		if (this.props.alreadyLogged) {
 			return (
-				<View>
+				<View style={styles.center}>
 					<Ionicons
-						name="md-happy"
+						name={ isIOS() ? 'ios-happy' : 'md-happy' }
 						size={100}
 					/>
 					<Text>You already logged your information for today</Text>
@@ -156,7 +165,7 @@ class AddEntry extends Component {
 		}
 
 		return (
-			<View>
+			<View style={styles.container}>
 				<DateHeader date={new Date()} />
 				{
 					metrics.map(metric => {
@@ -164,7 +173,7 @@ class AddEntry extends Component {
 						const value = this.state[metric];
 
 						return (
-							<View key={metric}>
+							<View key={metric} style={styles.row}>
 								{ getIcon() }
 								{this.renderMetricSwitcher(metric, type, value, rest)}
 							</View>
@@ -176,6 +185,50 @@ class AddEntry extends Component {
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: Colors.white
+	},
+	row: {
+		flexDirection: "row",
+		flex: 1,
+		alignItems: "center"
+	},
+	iosSubmitBtn: {
+		backgroundColor: Colors.purple,
+		padding: 10,
+		borderRadius: 7,
+		height: 45,
+		marginLeft: 40,
+		marginRight: 40
+	},
+	androidSubmitBtn: {
+		backgroundColor: Colors.purple,
+		padding: 10,
+		paddingLeft: 30,
+		paddingRight: 30,
+		height: 45,
+		borderRadius: 2,
+		alignSelf: "flex-end",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	submitBtnText: {
+		color: Colors.white,
+		fontSize: 22,
+		textAlign: "center"
+	},
+	center: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginLeft: 30,
+		marginRight: 30
+	}
+});
 
 function mapStateToProps (state) {
 	const key = timeToString();
