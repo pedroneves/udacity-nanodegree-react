@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import reducers from './reducers'
 
 import AddEntry from './components/AddEntry';
+import History from './components/History';
 
 const store = createStore(reducers);
 
@@ -14,7 +15,7 @@ export default class App extends React.Component {
 		return (
 			<Provider store={store}>
 				<View style={{ flex:1 }}>
-					<AddEntry />
+					<History />
 				</View>
 			</Provider>
 		);

@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {
 	getMetricMetaInfo,
 	timeToString,
-	getDailyRemainderValue,
+	getDailyReminderValue,
 	isIOS,
 	isAndroid
 } from '../utils/helpers';
@@ -113,7 +113,7 @@ class AddEntry extends Component {
 		const key = timeToString();
 
 		// TODOS
-		this.props.dispatch(addEntry({ [key]: getDailyRemainderValue() }));
+		this.props.dispatch(addEntry({ [key]: getDailyReminderValue() }));
 		this.reset()
 		// Navigate to Home
 		API.removeEntry(key);
