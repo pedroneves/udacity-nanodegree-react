@@ -22,7 +22,6 @@ class History extends Component {
 				}
 			})
 			.then(() => this.setState(() => ({ready: true})))
-			.catch(alert)
 	}
 
 	renderItem = ({ today, ...metrics }, formattedDate, key) => (
