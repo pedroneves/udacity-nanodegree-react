@@ -38,9 +38,12 @@ class History extends Component {
 		)
 	}
 
-	renderItemMetrics ({ metrics, formattedDate }) {
+	renderItemMetrics ({ metrics, formattedDate, key }) {
+		const { navigate } = this.props.navigation;
+		const entryOptions = { entryId: key }
+
 		return (
-			<TouchableOpacity onPress={() => console.log('Pressed!')} >
+			<TouchableOpacity onPress={() => navigate('EntryDetail', entryOptions)} >
 				<MetricCard metrics={metrics} date={formattedDate} />
 			</TouchableOpacity>
 		)
@@ -51,7 +54,7 @@ class History extends Component {
 			{
 				today
 					? this.renderToday({ today, formattedDate })
-					: this.renderItemMetrics({ metrics, formattedDate })
+					: this.renderItemMetrics({ metrics, formattedDate, key })
 			}
 		</View>
 	)
