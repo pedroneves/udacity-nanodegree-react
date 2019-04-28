@@ -5,7 +5,7 @@ import * as Colors from '../utils/colors';
 export default function DateHeader ({ date }={}) {
 	return (
 		<Text style={{ color: Colors.purple, fontSize: 25 }}>
-			{date.toLocaleDateString()}
+			{date}
 		</Text>
 	)
 }
