@@ -166,7 +166,7 @@ class AddEntry extends Component {
 
 		return (
 			<View style={styles.container}>
-				<DateHeader date={new Date()} />
+				<DateHeader date={(new Date()).toLocaleDateString()} />
 				{
 					metrics.map(metric => {
 						const { getIcon, type, ...rest } = metaInfo[metric];
