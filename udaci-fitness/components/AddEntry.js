@@ -11,6 +11,7 @@ import {
 	isAndroid
 } from '../utils/helpers';
 import * as Colors from '../utils/colors';
+import { NavigationActions } from 'react-navigation'
 
 import { addEntry } from '../actions'
 
@@ -99,13 +100,19 @@ class AddEntry extends Component {
 		})
 	}
 
+	toHome = () => {
+		this.props.navigation.dispatch(NavigationActions.back({
+			key: 'AddEntry'
+		}))
+	}
+
 	submit = () => {
 		const key = timeToString();
 		const entry = this.getEntry();
 
 		// TODOS
 		this.props.dispatch(addEntry({ [key]: entry }));
-		// Navigate to Home
+		this.toHome();
 		API.submitEntry({entry, key});
 	}
 
@@ -115,7 +122,7 @@ class AddEntry extends Component {
 		// TODOS
 		this.props.dispatch(addEntry({ [key]: getDailyReminderValue() }));
 		this.reset()
-		// Navigate to Home
+		this.toHome();
 		API.removeEntry(key);
 		// Clean local notification
 	}
